@@ -1,8 +1,6 @@
-import React, { useState } from "react";
-// import { usePokemonStore } from "../../hooks/hooks";
+import React, { useState, memo } from "react";
 import { useObserver } from "mobx-react";
 import CardPreview from "../card-preview/card-preview.component";
-
 import PaginationActions from "./pagination-action.component";
 
 import {
@@ -17,66 +15,85 @@ import {
   Grid,
 } from "@material-ui/core";
 
-const PokemonPreview = ({ data }) => {
-  //   const pokemonStore = usePokemonStore();
+const Preview = ({
+  data,
+  setResultPerPage,
+  setOffset,
+  rows,
+  totalPokemonsCount,
+  isType,
+  page,
+  setPage,
+}) => {
+  const [currentPage, setCurrentPage] = useState(page);
+  const [rowsPerPage, setRowsPerPage] = useState(rows);
 
-  const [currentPage, setCurrentPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-
-  const handleChangePage = (event, newPage) => setCurrentPage(newPage);
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setCurrentPage(0);
+  const handleChangePage = (event, newPage) => {
+    setCurrentPage(newPage);
+    setPage(newPage);
+    if (!isType && newPage > currentPage) {
+      setOffset(data.length);
+    }
   };
 
-  return useObserver(() => (
-    <TableContainer component={Paper}>
-      <Table aria-label="custom pagination table">
-        <TableBody>
-          <TableRow>
-            <TableCell>
-              <Grid container spaicing={3}>
-                {(rowsPerPage > 0
-                  ? data.slice(
-                      currentPage * rowsPerPage,
-                      currentPage * rowsPerPage + rowsPerPage
-                    )
-                  : data
-                ).map((pokemon, index) => {
-                  return (
-                    <Grid key={index} item xs={12} sm={6} md={4} lg={4} xl={2}>
-                      <CardPreview pokemon={pokemon} />
-                    </Grid>
-                  );
-                })}
-              </Grid>
-            </TableCell>
-          </TableRow>
-        </TableBody>
+  const handleChangeRowsPerPage = (event) => {
+    const intValue = parseInt(event.target.value, 10);
+    setRowsPerPage(intValue);
+    if (!isType) {
+      setOffset(data.length);
+      setResultPerPage(intValue);
+    }
+  };
 
-        <TableFooter>
-          <TableRow>
-            <TablePagination
-              rowsPerPageOptions={[10, 20, 50]}
-              colSpan={3}
-              count={data.length}
-              rowsPerPage={rowsPerPage}
-              labelRowsPerPage={"Cards per page"}
-              page={currentPage}
-              SelectProps={{
-                inputProps: { "aria-label": "Cards" },
-                native: true,
-              }}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-              ActionsComponent={PaginationActions}
-            />
-          </TableRow>
-        </TableFooter>
-      </Table>
-    </TableContainer>
-  ));
+  return useObserver(() => {
+    return (
+      <TableContainer component={Paper}>
+        <Table aria-label="custom pagination table">
+          <TableBody>
+            <TableRow>
+              <TableCell>
+                <Grid container spaicing={4} alignContent="center">
+                  {(rowsPerPage > 0
+                    ? data.slice(
+                        currentPage * rowsPerPage,
+                        currentPage * rowsPerPage + rowsPerPage
+                      )
+                    : data
+                  ).map((pokemon, index) => {
+                    return (
+                      <Grid key={index} item xs={12} sm={6} md={4} lg={2}>
+                        <CardPreview pokemon={pokemon} additionalInfo={false} />
+                      </Grid>
+                    );
+                  })}
+                </Grid>
+              </TableCell>
+            </TableRow>
+          </TableBody>
+
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                rowsPerPageOptions={[10, 20, 50]}
+                colSpan={3}
+                count={totalPokemonsCount}
+                rowsPerPage={rowsPerPage}
+                labelRowsPerPage={"Cards per page"}
+                page={currentPage}
+                SelectProps={{
+                  inputProps: { "aria-label": "Cards" },
+                  native: true,
+                }}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+                ActionsComponent={PaginationActions}
+              />
+            </TableRow>
+          </TableFooter>
+        </Table>
+      </TableContainer>
+    );
+  });
 };
 
-export default PokemonPreview;
+export const PokemonPreview = memo(Preview);
