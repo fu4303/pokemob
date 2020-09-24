@@ -3,10 +3,19 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { Provider } from 'mobx-react';
+import PokemonStore from './store/store';
+import { BrowserRouter } from 'react-router-dom';
+
+const store = new PokemonStore();
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Provider pokemonStore={store}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );
