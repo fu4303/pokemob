@@ -24,12 +24,12 @@ The received data from those API calls is saved in one array. Like that, there i
 * At the same time, previously received data doesn’t get lost, it gets stored in array, so there is no need to fetch again when filters are removed;
 * Filter by type works with multiple selected types;
 
-* Filter by name sends request on https://pokeapi.co/api/v2/pokémon/{name}
+* Filter by name sends request on https://pokeapi.co/api/v2/pokémon/{name}, and works by full match;
 
 ### Notes:
 
 * I don’t use images from the API, because I wanted to get them in a better quality. Insted, I used images provided by https://pokeres.bastionbot.org ;
 
 ### To impove:
-Ideally, filter should cache data and use it to check it in first place before making API calls.
+Ideally, filter should cache data and use it to check it in first place before making API calls;
 
