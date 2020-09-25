@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme) => ({
 
 const PaginationActions = (props) => {
   const classes = useStyles();
-
   const theme = useTheme();
   const { count, page, rowsPerPage, onChangePage } = props;
 
@@ -30,10 +29,6 @@ const PaginationActions = (props) => {
 
   const handleNextButtonClick = (event) => {
     onChangePage(event, page + 1);
-  };
-
-  const handleLastPageButtonClick = (event) => {
-    onChangePage(event, Math.max(0, Math.ceil(count / rowsPerPage) - 1));
   };
 
   return (
@@ -66,13 +61,6 @@ const PaginationActions = (props) => {
         ) : (
           <KeyboardArrowRight />
         )}
-      </IconButton>
-      <IconButton
-        onClick={handleLastPageButtonClick}
-        disabled={page >= Math.ceil(count / rowsPerPage) - 1}
-        aria-label="last page"
-      >
-        {theme.direction === "rtl" ? <FirstPageIcon /> : <LastPageIcon />}
       </IconButton>
     </div>
   );
