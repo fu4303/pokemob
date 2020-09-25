@@ -1,4 +1,4 @@
-### Pokedex App:
+### Pokemob App:
 * This app is developed with React.js and MobX for state management;
 * Uses Pokémon API (http://pokeapi.co/)
 
