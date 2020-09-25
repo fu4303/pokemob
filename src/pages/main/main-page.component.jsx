@@ -20,7 +20,10 @@ const MainPage = ({ match }) => {
     return (
       <div className="main-page-container">
         {!!match.params.pokeId ? (
-          <PokeInfo pokeId={match.params.pokeId} />
+          <PokeInfo
+            pokeId={parseInt(match.params.pokeId)}
+            data={pokemonStore.filteredPokemons}
+          />
         ) : (
           <>
             <SearchFilterContainer />
