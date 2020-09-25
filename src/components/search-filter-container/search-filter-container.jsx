@@ -11,14 +11,14 @@ const SearchFilterContainer = () => {
   const typesArray = Object.keys(POKEMON_TYPES).map((i) => POKEMON_TYPES[i]);
   return (
     <Grid container spacing={2} justify="center">
-      <Grid item xs={12} sm={6} md={4}>
+      <Grid item xs={10} sm={6} md={4}>
         <SearchInput
           setFilter={pokemonStore.filterPokemons}
           input={pokemonStore.filter.name}
           clearFilterAction={pokemonStore.clearFilterAction}
         />
       </Grid>
-      <Grid item xs={12} sm={6} md={4}>
+      <Grid item xs={10} sm={6} md={4}>
         <FilterInput
           filterData={typesArray}
           filterPokemonsAction={pokemonStore.filterPokemons}

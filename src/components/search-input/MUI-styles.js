@@ -6,7 +6,7 @@ export const searchStyles = makeStyles((theme) => ({
         display: "flex",
         alignItems: "center",
         width: "100%",
-        margin: theme.spacing(1),
+        margin: '8px 0px',
     },
     input: {
         marginLeft: theme.spacing(1),
