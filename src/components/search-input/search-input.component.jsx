@@ -15,11 +15,10 @@ const SearchInput = ({ setFilter, input }) => {
   const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
-    debugger;
-    if (typeof input !== "undefined") {
-      setSearchInput(input);
-    } else {
+    if (typeof input === "undefined") {
       setSearchInput("");
+    } else {
+      setSearchInput(input);
     }
   }, [input]);
 
