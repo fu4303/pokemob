@@ -1,59 +1,63 @@
 import { observable, action, computed, decorate } from 'mobx';
 import { fetchAPI } from '../api';
-import { deleteKeyFromObj } from '../components/utils/deleteKeyFromObj';
 import { isEmpty } from '../components/utils/isObjEmpty';
-import { toJS } from 'mobx';
-
 
 export default class PokemonStore {
-    pokemons = [];
     isFetching = true;
-    filter = {}; // name: '', types: []
+    pokemons = [];
+    pokemonsByType = [];
+    pokemonByName = [];
+    availablePokemonsCount = 0;
+    filter = {}; // name: 'bulbasaur', types: ['grass']
+    filterError = false;
     resultPerPage = 10;
     offset = 0;
+    currentPage = 0;
 
     get filteredPokemons() {
         if (!isEmpty(this.filter)) {
-            let pokemonsArr = [];
-            let filteredFilter = deleteKeyFromObj(this.filter, 'name');
-
-            if (this.filter.hasOwnProperty('name')) {
-                pokemonsArr = this.pokemons.filter(pokemon => pokemon.name.includes(this.filter.name));
-            } else {
-                pokemonsArr = this.pokemons;
+            let pokemonsArr = this.pokemons;
+            if (this.filter.hasOwnProperty('types')) {
+                pokemonsArr = this.pokemonsByType;
+            }
+            else if (!isEmpty(this.pokemonByName)) {
+                pokemonsArr = this.pokemonByName;
             }
             return pokemonsArr;
         } else {
             return this.pokemons;
         }
-
     }
 
-    fetch() {
-        // check if we need to retrieve new pokemons based on offset value, which comes from pokemon-preview.component
-        this.isFetching = true;
-        fetchAPI(`https://pokeapi.co/api/v2/pokemon?limit=${this.resultPerPage}&offset=${this.offset}`).then((allPokemons) => {
-            Promise.all(allPokemons.results.map(pokemon => fetchAPI(pokemon.url))).then((fetchedPokemons) => {
-                this.pokemons = [...this.pokemons, ...fetchedPokemons];
-                this.isFetching = false;
-                console.log(toJS(fetchedPokemons));
-            });
-        });
-
+    get totalPokemonsCount() {
+        if (this.filter.hasOwnProperty('types')) {
+            return this.pokemonsByType.length;
+        } else {
+            return this.availablePokemonsCount;
+        }
     }
 
+    get isType() {
+        if (this.filter.hasOwnProperty('types')) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-    getSelectedPokemon(pokeId) {
-        return this.pokemons.filter(pokemon => pokemon.id === pokeId)
+    getSelectedPokemon(pokemons, pokeId) {
+        return pokemons.filter(pokemon => pokemon.id === pokeId)
     }
 
     filterPokemons = (filterToAdd) => {
-        // console.log(toJS(filterToAdd));
         this.filter = { ...this.filter, ...filterToAdd }
     }
 
     clearFilter = () => {
-        this.filter = {}
+        this.filter = {};
+        this.offset = 0;
+        this.pokemonsByType = [];
+        this.pokemonByName = [];
     }
 
     setResultPerPage = (newResult) => {
@@ -61,26 +65,75 @@ export default class PokemonStore {
     }
 
     setOffset = (newOffset) => {
-        // console.log(this.offset, 'this', newOffset, 'new')
         this.offset = newOffset;
     }
 
+    setCurrentPage = (page) => {
+        this.currentPage = page;
+    }
+
+    setFilterError = (bool) => {
+        this.filterError = bool;
+    }
+
+    fetchByName() {
+        fetchAPI(`https://pokeapi.co/api/v2/pokemon/${this.filter.name.toLowerCase().trim()}`).then((response) => {
+            if (response.status === 404) {
+                this.setFilterError(true);
+            } else {
+                this.isFetching = true;
+                this.pokemonByName = [response];
+            }
+        }).finally(() => this.isFetching = false)
+    }
+
+    fetchByType() {
+        this.isFetching = true;
+        fetchAPI(`https://pokeapi.co/api/v2/type/${this.filter.types[0]}`).then((allPokemons) => {
+            Promise.all(allPokemons.pokemon.map(pokemon =>
+                fetchAPI(pokemon.pokemon.url)
+            )).then((fetchedPokemons) => {
+                this.pokemonsByType = fetchedPokemons;
+            }).finally(() => this.isFetching = false)
+        })
+    }
+
+    fetch() {
+        this.isFetching = true;
+        fetchAPI(`https://pokeapi.co/api/v2/pokemon?limit=${this.resultPerPage}&offset=${this.offset}`).then((allPokemons) => {
+            this.availablePokemonsCount = allPokemons.count;
+            Promise.all(allPokemons.results.map(pokemon => fetchAPI(pokemon.url))).then((fetchedPokemons) => {
+                this.pokemons = [...this.pokemons, ...fetchedPokemons];
+            }).finally(() => this.isFetching = false);
+        });
+    }
 }
 
 decorate(PokemonStore, {
+    availablePokemonsCount: observable,
     pokemons: observable,
+    pokemonsByType: observable,
+    pokemonByName: observable,
     filter: observable,
     isFetching: observable,
     resultPerPage: observable,
     offset: observable,
+    currentPage: observable,
+    filterError: observable,
 
     filteredPokemons: computed,
+    totalPokemonsCount: computed,
+    isType: computed,
 
     getSelectedPokemon: action,
     fetch: action,
+    fetchByName: action,
+    fetchByType: action,
     filterPokemons: action,
     clearFilter: action,
     setOffset: action,
     setResultPerPage: action,
+    setCurrentPage: action,
+    setFilterError: action,
 })
 
