@@ -5,9 +5,9 @@ import "./styles.scss";
 import CopyData from "../copy-data/copy-data.component";
 import TypePreview from "../type-preview/type-preview.component";
 import AdditionalInfo from "../additional-info/additional-info.component";
-import { copyToClipboard } from "../utils/copyToClipboard";
-import { firstCharToUpperCase } from "../utils/firstCharToUpperCase";
-import { sortArrOfObj } from "../utils/sortArrOfObj";
+import { copyToClipboard } from "../../utils/copyToClipboard";
+import { firstCharToUpperCase } from "../../utils/firstCharToUpperCase";
+import { sortArrOfObj } from "../../utils/sortArrOfObj";
 import { POKEMON_TYPES } from "../../constants/pokemon-types";
 
 import {

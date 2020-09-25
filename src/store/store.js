@@ -1,6 +1,6 @@
 import { observable, action, computed, decorate } from 'mobx';
 import { fetchAPI } from '../api';
-import { isEmpty } from '../components/utils/isObjEmpty';
+import { isEmpty } from '../utils/isObjEmpty';
 
 export default class PokemonStore {
     isFetching = true;

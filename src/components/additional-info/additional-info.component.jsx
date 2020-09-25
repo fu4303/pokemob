@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { firstCharToUpperCase } from "../utils/firstCharToUpperCase";
+import { firstCharToUpperCase } from "../../utils/firstCharToUpperCase";
 import { Typography, CardContent } from "@material-ui/core";
 
 const AdditionalInfo = ({ pokemon }) => {
