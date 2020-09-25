@@ -14,6 +14,7 @@ const FilterInput = ({ filterData, filterPokemonsAction }) => {
     if (value.length > 0) {
       const newValue = value[value.length - 1].name;
       setValues([...values, newValue]);
+      pokemonStore.clearFilter();
       filterPokemonsAction({ types: [newValue] });
       pokemonStore.fetchByType();
     } else {

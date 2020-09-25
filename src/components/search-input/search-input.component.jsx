@@ -15,8 +15,11 @@ const SearchInput = ({ setFilter, input }) => {
   const [searchInput, setSearchInput] = useState("");
 
   useEffect(() => {
+    debugger;
     if (typeof input !== "undefined") {
       setSearchInput(input);
+    } else {
+      setSearchInput("");
     }
   }, [input]);
 
@@ -34,6 +37,7 @@ const SearchInput = ({ setFilter, input }) => {
 
   const onStartSearch = (event) => {
     if (event.key === "Enter") {
+      pokemonStore.clearFilter();
       setFilter({ name: searchInput });
       startSearch(event);
     }
@@ -43,8 +47,8 @@ const SearchInput = ({ setFilter, input }) => {
     <Paper component="form" className={classes.root}>
       <InputBase
         className={classes.input}
-        placeholder="Search by full name"
-        inputProps={{ "aria-label": "search google maps" }}
+        placeholder="Search by name"
+        inputProps={{ "aria-label": "search pokemons" }}
         onChange={handleSearch}
         onKeyPress={onStartSearch}
         value={searchInput}

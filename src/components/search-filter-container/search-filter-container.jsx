@@ -4,18 +4,18 @@ import { POKEMON_TYPES } from "../../constants/pokemon-types";
 import FilterInput from "../filter-input/filter-input.component";
 import SearchInput from "../search-input/search-input.component";
 import Grid from "@material-ui/core/Grid";
+import { useObserver } from "mobx-react";
 
 const SearchFilterContainer = () => {
   const pokemonStore = usePokemonStore();
 
   const typesArray = Object.keys(POKEMON_TYPES).map((i) => POKEMON_TYPES[i]);
-  return (
+  return useObserver(() => (
     <Grid container spacing={2} justify="center">
       <Grid item xs={10} sm={6} md={4}>
         <SearchInput
           setFilter={pokemonStore.filterPokemons}
           input={pokemonStore.filter.name}
-          clearFilterAction={pokemonStore.clearFilterAction}
         />
       </Grid>
       <Grid item xs={10} sm={6} md={4}>
@@ -25,6 +25,6 @@ const SearchFilterContainer = () => {
         />
       </Grid>
     </Grid>
-  );
+  ));
 };
 export default SearchFilterContainer;
