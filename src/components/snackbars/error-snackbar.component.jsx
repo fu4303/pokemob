@@ -20,7 +20,13 @@ const ErrorSnackbar = ({ isError, message, errorAction }) => {
 
   return (
     <div className={classes.root}>
-      <Snackbar open={isError} autoHideDuration={6000} onClose={handleClose}>
+      <Snackbar
+        open={isError}
+        autoHideDuration={6000}
+        onClose={handleClose}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        key={{ vertical: "top", horizontal: "center" }}
+      >
         <Alert onClose={handleClose} severity="error">
           {message}
         </Alert>
