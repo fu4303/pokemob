@@ -1,13 +1,14 @@
+import PropTypes from "prop-types";
 import React from "react";
+import { Link } from "react-router-dom";
 import "./styles.scss";
 import CopyData from "../copy-data/copy-data.component";
-import { copyToClipboard } from "../utils/copyToClipboard";
-import { POKEMON_TYPES } from "../../constants/pokemon-types";
 import TypePreview from "../type-preview/type-preview.component";
+import AdditionalInfo from "../additional-info/additional-info.component";
+import { copyToClipboard } from "../utils/copyToClipboard";
 import { firstCharToUpperCase } from "../utils/firstCharToUpperCase";
 import { sortArrOfObj } from "../utils/sortArrOfObj";
-import { Link } from "react-router-dom";
-import AdditionalInfo from "../additional-info/additional-info.component";
+import { POKEMON_TYPES } from "../../constants/pokemon-types";
 
 import {
   Card,
@@ -18,10 +19,9 @@ import {
 } from "@material-ui/core";
 
 const CardPreview = ({ pokemon, additionalInfo }) => {
-  const { name, id, types, base_experience } = pokemon;
+  const { name, id, types, base_experience, stats } = pokemon;
   const imageUrl = `https://pokeres.bastionbot.org/images/pokemon/${id}.png`;
-  const statsCopy = pokemon.stats.slice();
-  const newStats = sortArrOfObj(statsCopy, "base_stat");
+  const newStats = sortArrOfObj(stats.slice(), "base_stat");
 
   return (
     <Card className="card">
@@ -80,6 +80,16 @@ const CardPreview = ({ pokemon, additionalInfo }) => {
       </CardContent>
     </Card>
   );
+};
+
+CardPreview.propTypes = {
+  pokemon: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
+    base_experience: PropTypes.number.isRequired,
+    stats: PropTypes.array.isRequired,
+  }),
+  additionalInfo: PropTypes.bool.isRequired,
 };
 
 export default CardPreview;

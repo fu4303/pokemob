@@ -1,29 +1,20 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
 import FileCopyIcon from "@material-ui/icons/FileCopy";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
-
-export const useStyles = makeStyles((theme) => ({
-  arrow: {
-    color: theme.palette.common.black,
-  },
-  tooltip: {
-    fontSize: "1rem",
-    backgroundColor: theme.palette.common.black,
-  },
-}));
+import { copyStyles, useStyles } from "./MUI-styles";
 
 const CopyData = ({ children, onCopy }) => {
-  const toolTipClasses = useStyles();
+  const classes = copyStyles();
+  const toolTipStyles = useStyles();
 
   const CustomTooltip = (props) => {
-    return <Tooltip arrow classes={toolTipClasses} {...props} />;
+    return <Tooltip arrow classes={toolTipStyles} {...props} />;
   };
 
   return (
-    <div className="container">
+    <div className={classes.container}>
       <CustomTooltip title="Copy" placement="top">
         <IconButton aria-label="Copy" onClick={onCopy}>
           <FileCopyIcon fontSize="small" color="primary" />

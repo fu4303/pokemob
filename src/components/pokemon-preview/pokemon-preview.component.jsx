@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import React, { useState, memo } from "react";
 import { useObserver } from "mobx-react";
 import CardPreview from "../card-preview/card-preview.component";
@@ -17,12 +18,12 @@ import {
 
 const Preview = ({
   data,
-  setResultPerPage,
-  setOffset,
   rows,
-  totalPokemonsCount,
   isType,
   page,
+  totalPokemonsCount,
+  setResultPerPage,
+  setOffset,
   setPage,
 }) => {
   const [currentPage, setCurrentPage] = useState(page);
@@ -94,6 +95,17 @@ const Preview = ({
       </TableContainer>
     );
   });
+};
+
+Preview.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.object.isRequired),
+  setResultPerPage: PropTypes.func.isRequired,
+  setOffset: PropTypes.func.isRequired,
+  setPage: PropTypes.func.isRequired,
+  rows: PropTypes.number.isRequired,
+  totalPokemonsCount: PropTypes.number.isRequired,
+  isType: PropTypes.bool.isRequired,
+  page: PropTypes.number.isRequired,
 };
 
 export const PokemonPreview = memo(Preview);

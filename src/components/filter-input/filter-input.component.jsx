@@ -1,21 +1,12 @@
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { usePokemonStore } from "../../hooks/usePokemonStore";
-import { makeStyles } from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    width: "100%",
-    "& > * + *": {
-      margin: theme.spacing(3),
-    },
-  },
-}));
+import { filterStyles } from "./MUI-styles";
 
 const FilterInput = ({ filterData, filterPokemonsAction }) => {
-  const classes = useStyles();
+  const classes = filterStyles();
   const [values, setValues] = useState([]); // ['poison', 'fire']
   const pokemonStore = usePokemonStore();
 
