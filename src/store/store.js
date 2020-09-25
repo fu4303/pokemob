@@ -32,7 +32,10 @@ export default class PokemonStore {
     get totalPokemonsCount() {
         if (this.filter.hasOwnProperty('types')) {
             return this.pokemonsByType.length;
-        } else {
+        } else if (this.filter.hasOwnProperty('name')) {
+            return this.pokemonByName.length
+        }
+        else {
             return this.availablePokemonsCount;
         }
     }
