@@ -1,8 +1,9 @@
 import PropTypes from "prop-types";
-import React, { useState, memo } from "react";
+import React, { useState, useEffect, memo } from "react";
 import { useObserver } from "mobx-react";
 import CardPreview from "../card-preview/card-preview.component";
 import PaginationActions from "./pagination-action.component";
+import { paginationStyles } from "./MUI-styles";
 
 import {
   Table,
@@ -28,8 +29,14 @@ const Preview = ({
 }) => {
   const [currentPage, setCurrentPage] = useState(page);
   const [rowsPerPage, setRowsPerPage] = useState(rows);
+  const classes = paginationStyles();
+
+  useEffect(() => {
+    setCurrentPage(page);
+  }, [page]);
 
   const handleChangePage = (event, newPage) => {
+    window.scrollTo(0, 0);
     setCurrentPage(newPage);
     setPage(newPage);
     if (!isType && newPage > currentPage) {
@@ -75,6 +82,10 @@ const Preview = ({
           <TableFooter>
             <TableRow>
               <TablePagination
+                classes={{
+                  toolbar: classes.tablePagination,
+                  caption: classes.caption,
+                }}
                 rowsPerPageOptions={[10, 20, 50]}
                 colSpan={3}
                 count={totalPokemonsCount}
