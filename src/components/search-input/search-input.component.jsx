@@ -31,6 +31,7 @@ const SearchInput = ({ setFilter, input }) => {
     if (searchInput !== "") {
       setFilter({ name: searchInput });
       pokemonStore.fetchByName();
+      pokemonStore.setCurrentPage(0);
     }
   };
 
