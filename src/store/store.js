@@ -4,6 +4,7 @@ import { isEmpty } from '../utils/isObjEmpty';
 
 export default class PokemonStore {
     isFetching = true;
+    isSearching = false;
     pokemons = [];
     pokemonsByType = [];
     pokemonByName = [];
@@ -61,6 +62,7 @@ export default class PokemonStore {
         this.offset = 0;
         this.pokemonsByType = [];
         this.pokemonByName = [];
+        this.isSearching = false;
     }
 
     setResultPerPage = (newResult) => {
@@ -80,6 +82,8 @@ export default class PokemonStore {
     }
 
     fetchByName() {
+        // add isSearching to handle unnecessary trigger of fetch()
+        this.isSearching = true;
         fetchAPI(`https://pokeapi.co/api/v2/pokemon/${this.filter.name.toLowerCase().trim()}`).then((response) => {
             if (response.status === 404) {
                 this.setFilterError(true);
@@ -102,13 +106,16 @@ export default class PokemonStore {
     }
 
     fetch() {
-        this.isFetching = true;
-        fetchAPI(`https://pokeapi.co/api/v2/pokemon?limit=${this.resultPerPage}&offset=${this.offset}`).then((allPokemons) => {
-            this.availablePokemonsCount = allPokemons.count;
-            Promise.all(allPokemons.results.map(pokemon => fetchAPI(pokemon.url))).then((fetchedPokemons) => {
-                this.pokemons = [...this.pokemons, ...fetchedPokemons];
-            }).finally(() => this.isFetching = false);
-        });
+        // check if fetchByName function was executed (handle offset changes)
+        if (!this.isSearching) {
+            this.isFetching = true;
+            fetchAPI(`https://pokeapi.co/api/v2/pokemon?limit=${this.resultPerPage}&offset=${this.offset}`).then((allPokemons) => {
+                this.availablePokemonsCount = allPokemons.count;
+                Promise.all(allPokemons.results.map(pokemon => fetchAPI(pokemon.url))).then((fetchedPokemons) => {
+                    this.pokemons = [...this.pokemons, ...fetchedPokemons];
+                }).finally(() => this.isFetching = false);
+            });
+        }
     }
 }
 
