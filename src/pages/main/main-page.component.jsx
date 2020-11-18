@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import BackToTop from "react-back-to-top-button";
 import PokeInfo from "../../components/poke-all-info/poke-all-info.component";
 import "./styles.scss";
 import { usePokemonStore } from "../../hooks/usePokemonStore";
@@ -6,6 +7,7 @@ import { useObserver } from "mobx-react";
 import { PokemonPreview } from "../../components/pokemon-preview/pokemon-preview.component";
 import withSpinner from "../../components/with-spinner/with-spinner.component";
 import SearchFilterContainer from "../../components/search-filter-container/search-filter-container";
+import BackToTopIcon from "../../components/back-to-top/back-to-top.component";
 
 const PokemonPreviewWithSpinner = withSpinner(PokemonPreview);
 
@@ -26,6 +28,14 @@ const MainPage = ({ match }) => {
           />
         ) : (
           <>
+            <BackToTop
+              children={<BackToTopIcon />}
+              style={{ margin: "20px 20px 60px 20px" }}
+              showOnScrollUp
+              showAt={100}
+              speed={1500}
+              easing="easeInOutQuint"
+            ></BackToTop>
             <SearchFilterContainer />
             <PokemonPreviewWithSpinner
               isLoading={pokemonStore.isFetching}
