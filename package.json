@@ -15,7 +15,7 @@
     "react-back-to-top-button": "0.0.14",
     "react-dom": "16.14.0",
     "react-router-dom": "5.2.0",
-    "react-scripts": "4.0.1",
+    "react-scripts": "4.0.3",
     "sass": "1.32.5"
   },
   "scripts": {
